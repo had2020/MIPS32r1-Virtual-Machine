@@ -115,43 +115,43 @@ enum Opcode {
 
 enum FuncCodes {
   // R-Type / Special (Opcode 0) Function Codes
-  OP_SLL = 0,
-  OP_SRL = 2,
-  OP_SRA = 3,
-  OP_SLLV = 4,
-  OP_SRLV = 6,
-  OP_SRAV = 7,
-  OP_JR = 8,
-  OP_JALR = 9,
-  OP_MOVZ = 10,
-  OP_MOVN = 11,
-  OP_SYSCALL = 12,
-  OP_BREAK = 13,
-  OP_SYNC = 15,
-  OP_MFHI = 16,
-  OP_MTHI = 17,
-  OP_MFLO = 18,
-  OP_MTLO = 19,
-  OP_MULT = 24,
-  OP_MULTU = 25,
-  OP_DIV = 26,
-  OP_DIVU = 27,
-  OP_ADD = 32,
-  OP_ADDU = 33,
-  OP_SUB = 34,
-  OP_SUBU = 35,
-  OP_AND = 36,
-  OP_OR = 37,
-  OP_XOR = 38,
-  OP_NOR = 39,
-  OP_SLT = 42,
-  OP_SLTU = 43,
-  OP_TGE = 48,
-  OP_TGEU = 49,
-  OP_TLT = 50,
-  OP_TLTU = 51,
-  OP_TEQ = 52,
-  OP_TNE = 54
+  OP_SLL = 0,      // Shift Left Logical
+  OP_SRL = 2,      // Shift Right Logical
+  OP_SRA = 3,      // Shift Right Arithmetic
+  OP_SLLV = 4,     // Shift Left Logical Variable
+  OP_SRLV = 6,     // Shift Right Logical Variable
+  OP_SRAV = 7,     // Shift Right Arithmetic Variable
+  OP_JR = 8,       // Jump Register
+  OP_JALR = 9,     // Jump and Link Register
+  OP_MOVZ = 10,    // Move Conditional if Zero
+  OP_MOVN = 11,    // Move Conditional if Not Zero
+  OP_SYSCALL = 12, // System Call Exception
+  OP_BREAK = 13,   // Breakpoint Exception
+  OP_SYNC = 15,    // Synchronize Shared Memory Operations
+  OP_MFHI = 16,    // Move From HI
+  OP_MTHI = 17,    // Move To HI
+  OP_MFLO = 18,    // Move From LO
+  OP_MTLO = 19,    // Move To LO
+  OP_MULT = 24,    // Multiply (Signed)
+  OP_MULTU = 25,   // Multiply Unsigned
+  OP_DIV = 26,     // Divide (Signed)
+  OP_DIVU = 27,    // Divide Unsigned
+  OP_ADD = 32,     // Add (Signed, with Overflow Trap)
+  OP_ADDU = 33,    // Add Unsigned (No Trap)
+  OP_SUB = 34,     // Subtract (Signed, with Overflow Trap)
+  OP_SUBU = 35,    // Subtract Unsigned (No Trap)
+  OP_AND = 36,     // Bitwise AND
+  OP_OR = 37,      // Bitwise OR
+  OP_XOR = 38,     // Bitwise XOR
+  OP_NOR = 39,     // Bitwise NOR
+  OP_SLT = 42,     // Set Less Than (Signed)
+  OP_SLTU = 43,    // Set Less Than Unsigned
+  OP_TGE = 48,     // Trap if Greater or Equal
+  OP_TGEU = 49,    // Trap if Greater or Equal Unsigned
+  OP_TLT = 50,     // Trap if Less Than
+  OP_TLTU = 51,    // Trap if Less Than Unsigned
+  OP_TEQ = 52,     // Trap if Equal
+  OP_TNE = 54      // Trap if Not Equal
 };
 
 int main() {
@@ -194,12 +194,21 @@ int main() {
 
     // execute
     switch (opcode) {
-    // ALU
-    case ADD: {
-
+      // ALU
+    case ADD: { // TODO: traps
+      if (funct == OP_ADD) {
+        regs[rd] = (uint32_t)((int32_t)regs[rs] + (int32_t)regs[rt]);
+      } else {
+        regs[rd] = regs[rs] + regs[rt];
+      }
       break;
     }
     case SUB: {
+      if (funct == OP_ADD) {
+        regs[rd] = (uint32_t)((int32_t)regs[rs] - (int32_t)regs[rt]);
+      } else {
+        regs[rd] = regs[rs] - regs[rt];
+      }
       break;
     }
     case MUL: {
