@@ -252,22 +252,28 @@ int main() {
         break;
     }
     case MOD: {
-      break;
+        regs[rd] = (uint32_t)((int32_t)regs[rs] % (int32_t)regs[rt]);
+        break;
     }
     case MODU: {
-      break;
+        regs[rd] = regs[rs] % regs[rt];
+        break;
     }
     case SLL: {
-      break;
+        regs[rd] = regs[rs] << regs[rt];
+        break;
     }
     case SRL: {
-      break;
+        regs[rd] = regs[rs] >> regs[rt];
+        break;
     }
     case SRA: {
-      break;
+        regs[rd] = (int32_t)regs[rs] >> (int32_t)regs[rt];
+        break;
     }
     case ROR: {
-      break;
+        regs[rd] = regs[rs]  regs[rt];
+        break;
     }
     case SLT: {
       break;
