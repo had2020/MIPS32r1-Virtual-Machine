@@ -198,13 +198,13 @@ int main() {
     case ADD: { // TODO: traps
       if (funct == OP_ADD) {
         regs[rd] = (uint32_t)((int32_t)regs[rs] + (int32_t)regs[rt]);
-      } else {
+      } else { // OP_ADDU
         regs[rd] = regs[rs] + regs[rt];
       }
       break;
     }
     case SUB: {
-      if (funct == OP_ADD) {
+      if (funct == OP_SUB) {
         regs[rd] = (uint32_t)((int32_t)regs[rs] - (int32_t)regs[rt]);
       } else {
         regs[rd] = regs[rs] - regs[rt];
@@ -212,19 +212,44 @@ int main() {
       break;
     }
     case MUL: {
-      break;
+        if (funct == OP_MULT) {
+            regs[rd] = (uint32_t)((int32_t)regs[rs] * (int32_t)regs[rt]);
+        } else {
+            regs[rd] = regs[rs] * regs[rt];
+        }
+        break;
     }
-    case MULT: {
-      break;
+    case MULT: { // not sure if funct should handle this
+        if (funct == OP_MULT) {
+            regs[rd] = (uint32_t)((int32_t)regs[rs] * (int32_t)regs[rt]);
+        } else {
+            regs[rd] = regs[rs] * regs[rt];
+        }
+        break;
     }
     case MULTU: {
-      break;
+        if (funct == OP_MULT) {
+            regs[rd] = (uint32_t)((int32_t)regs[rs] * (int32_t)regs[rt]);
+        } else {
+            regs[rd] = regs[rs] * regs[rt];
+        }
+        break;
     }
     case DIV: {
-      break;
+        if (funct == OP_DIV) {
+            regs[rd] = (uint32_t)((int32_t)regs[rs] / (int32_t)regs[rt]);
+        } else {
+            regs[rd] = regs[rs] / regs[rt];
+        }
+        break;
     }
     case DIVU: {
-      break;
+        if (funct == OP_DIV) {
+            regs[rd] = (uint32_t)((int32_t)regs[rs] / (int32_t)regs[rt]);
+        } else {
+            regs[rd] = regs[rs] / regs[rt];
+        }
+        break;
     }
     case MOD: {
       break;
