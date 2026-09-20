@@ -1,8 +1,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdbit.h>
 
 /*
 struct Registers {
@@ -188,9 +188,11 @@ int main() {
     uint8_t rd = (fetched & 0xF800) >> 11;    // destination register operand
     uint8_t shamt = (fetched & 0x7C0) >> 6;   // shift amount in SLL SRL SRA
     uint8_t funct = (fetched & 0x3F);         // function code when R-type
-    uint8_t imm = (fetched & 0xFFFF);         // 16 bit constanst imm
-    uint8_t addr = (fetched & 0x3FFFFFF); // target instruction for direct jumps
+    uint16_t imm = (fetched & 0xFFFF);         // 16 bit constanst imm/offset
+    uint16_t addr = (fetched & 0x3FFFFFF); // target instruction for direct jumps
     int16_t simm = (int16_t)imm;
+
+    // TODO: ADDI immediate instruction types
 
     // execute
     switch (opcode) {
@@ -272,61 +274,98 @@ int main() {
         break;
     }
     case ROR: {
-        regs[rd] = regs[rs]  regs[rt];
+        regs[rd] = ( regs[rs] >> regs[rt] |  regs[rs] << (sizeof(regs[rs]) * 32 - regs[rt] ));
         break;
     }
     case SLT: {
-      break;
+        if (regs[rs] == regs[rt]) {
+            regs[rd] = 1;
+        } else {
+            regs[rd] = 0;
+        }
+        break;
     }
     case SLTU: {
-      break;
+        if (regs[rs] == regs[rt]) {
+            regs[rd] = 1;
+        } else {
+            regs[rd] = 0;
+        }
+        break;
     }
     case AND: {
-      break;
+        regs[rd] = regs[rs] & regs[rt];
+        break;
     }
     case OR: {
-      break;
+        regs[rd] = regs[rs] | regs[rt];
+        break;
     }
     case XOR: {
-      break;
+        regs[rd] = regs[rs] ^ regs[rt];
+        break;
     }
     case NOR: {
-      break;
+        regs[rd] = !(regs[rs] | regs[rt]);
+        break;
     }
     case CLZ: {
-      break;
+        regs[rd] = stdc_count_zeros(regs[rs]);
+        break;
     }
     case CLO: {
-      break;
+        regs[rd] = stdc_count_ones_uc(regs[rs]);
+        break;
     }
 
     // Control Flow
     case BEQ: {
-      break;
+        if (regs[rs] == regs[rt]) {
+            pc += imm;
+        }
+        break;
     }
     case BGEZ: {
-      break;
+        if (regs[rs] >= 0) {
+            pc += imm;
+        }
+        break;
     }
     case BGTZ: {
-      break;
+        if (regs[rs] > 0) {
+            pc += imm;
+        }
+        break;
     }
     case BLEZ: {
-      break;
+        if (regs[rs] <= 0) {
+            pc += imm;
+        }
+        break;
     }
     case BLTZ: {
-      break;
+        if (regs[rs] < 0) {
+            pc += imm;
+        }
+        break;
     }
     case BNE: {
-      break;
+        if (regs[rs] != regs[rt]) {
+            pc += imm;
+        }
+        break;
     }
     case Jump: {
-      break;
+        pc += imm;
+        break;
     }
     case Jumpi: {
-      break;
+        pc = imm;
+        break;
     }
     case JumpDirect: {
-      break;
+        pc = addr;
+        break;
     }
     case SYSCALL: {
       break;
